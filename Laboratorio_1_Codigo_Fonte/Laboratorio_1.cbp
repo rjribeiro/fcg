@@ -82,10 +82,13 @@
 		<Unit filename="src/glad.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/main.cpp" />
-		<Unit filename="src/main_fan.cpp">
+		<Unit filename="src/main-fan.cpp">
 			<Option target="Linux" />
 		</Unit>
+		<Unit filename="src/main-strip.cpp">
+			<Option target="Linux" />
+		</Unit>
+		<Unit filename="src/main.cpp" />
 		<Unit filename="src/shader_fragment.glsl" />
 		<Unit filename="src/shader_vertex.glsl" />
 		<Extensions>

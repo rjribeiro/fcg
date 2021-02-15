@@ -174,7 +174,7 @@ int main()
         //                |          |  |                 +--- Vértices começam em indices[0] (veja função BuildTriangles()).
         //                |          |  |                 |
         //                V          V  V                 V
-        glDrawElements(GL_TRIANGLE_FAN, 18, GL_UNSIGNED_BYTE, 0);
+        glDrawElements(GL_TRIANGLE_STRIP,96, GL_UNSIGNED_BYTE, 0);
 
         // "Desligamos" o VAO, evitando assim que operações posteriores venham a
         // alterar o mesmo. Isso evita bugs.
@@ -235,53 +235,116 @@ GLuint BuildTriangles()
     //
 
 
-    /*GLfloat ponto_inicial[4] = {0.7f,  0.0, 0.0f, 1.0f};
-    GLfloat ponto_rotacionado_[4];
-    GLfloat *ponto_rotacionado = rotaciona(0.39, ponto_inicial, ponto_rotacionado_);
+    GLfloat NDC_coefficients[128];
 
-    GLfloat ponto_rotacionado2[4];
-    ponto_rotacionado2[0] = ponto_rotacionado[0];
-    ponto_rotacionado2[1] = ponto_rotacionado[1];
-    ponto_rotacionado2[2] = ponto_rotacionado[2];
-    ponto_rotacionado2[3] = ponto_rotacionado[3];
-
-    for(int i=0; i<4; i++) {
-        printf("%f\t", ponto_rotacionado2[i]);
-    }*/
-
-    GLfloat NDC_coefficients[68];
-
-    NDC_coefficients[0] = 0.0f;
-    NDC_coefficients[1] = 0.0f;
-    NDC_coefficients[2] = 0.0f;
-    NDC_coefficients[3] = 1.0f;
-
-    GLfloat ponto_inicial[4] = {0.7f,  0.0, 0.0f, 1.0f};
+    GLfloat ponto_inicial_interno[4] = {0.5f,  0.0f, 0.0f, 1.0f};
     float angulo = 0;
-    for(int i=4; i<=64; i+=4){
-        GLfloat ponto_rotacionado[4];
-        rotaciona(angulo, ponto_inicial, ponto_rotacionado);
-        NDC_coefficients[i] = ponto_rotacionado[0];
-        NDC_coefficients[i+1] = ponto_rotacionado[1];
-        NDC_coefficients[i+2] = ponto_rotacionado[2];
-        NDC_coefficients[i+3] = ponto_rotacionado[3];
+    GLfloat ponto_rotacionado_interno[4];
+    for(int i=0; i<=60; i+=4){
+        rotaciona(angulo, ponto_inicial_interno, ponto_rotacionado_interno);
+        NDC_coefficients[i] = ponto_rotacionado_interno[0];
+        NDC_coefficients[i+1] = ponto_rotacionado_interno[1];
+        NDC_coefficients[i+2] = ponto_rotacionado_interno[2];
+        NDC_coefficients[i+3] = ponto_rotacionado_interno[3];
         angulo+=M_PI/8;
     }
 
+    GLfloat ponto_inicial_externo[4] = {0.7f,  0.0f, 0.0f, 1.0f};
+    angulo = 0;
+    GLfloat ponto_rotacionado_externo[4];
+    for(int i=64; i<=124; i+=4){
+        rotaciona(angulo, ponto_inicial_externo, ponto_rotacionado_externo);
+        NDC_coefficients[i] = ponto_rotacionado_externo[0];
+        NDC_coefficients[i+1] = ponto_rotacionado_externo[1];
+        NDC_coefficients[i+2] = ponto_rotacionado_externo[2];
+        NDC_coefficients[i+3] = ponto_rotacionado_externo[3];
+        angulo+=M_PI/8;
+    }
 
+    GLfloat color_coefficients[128];
+    for(int i=0; i<=60; i+=4){
+        color_coefficients[i] = 1.0f;
+        color_coefficients[i+1] = 0.0f;
+        color_coefficients[i+2] = 0.0f;
+        color_coefficients[i+3] = 1.0f;
+    }
 
-
-    GLfloat color_coefficients[68];
-    color_coefficients[0] = 1.0f;
-    color_coefficients[1] = 0.0f;
-    color_coefficients[2] = 0.0f;
-    color_coefficients[3] = 1.0f;
-    for(int i=4; i<=64; i+=4){
+    for(int i=64; i<=124; i+=4){
         color_coefficients[i] = 0.0f;
         color_coefficients[i+1] = 0.0f;
         color_coefficients[i+2] = 1.0f;
-        color_coefficients[i+3] = 1.01;
+        color_coefficients[i+3] = 1.0f;
     }
+
+ // GLubyte indices[] = {0,17,18, 0,18,19,  0,19,20,  0,20,21, 0,21,22, 0,22,23, 0,23,24, 0,24,25,  0,25,26,  0,26,27, 0,27,28, 0,28,29, 0,29,30, 0,30,31, 0,31,32, 0,32,17,
+   //                      0,1,2,   0,2,3,    0,3,4,    0,4,5,   0,5,6,   0,6,7,   0,7,8,   0,8,9,    0,9,10,   0,10,11, 0,11,12, 0,12,13, 0,13,14, 0,14,15, 0,15,16, 0,16,1
+    //                     };
+
+
+
+   GLubyte indices[] = {0,16,17,
+                        0,17,1,
+
+                        1,17,18,
+                        1,18,2,
+
+                        2,18,19,
+                        2,19,3,
+
+                        3,19,20,
+                        3,20,4,
+
+                        4,20,21,
+                        4,21,5,
+
+                        5,21,22,
+                        5,22,6,
+
+                        6,22,23,
+                        6,23,7,
+
+                        7,23,24,
+                        7,24,8,
+
+                        8,24,25,
+                        8,25,9,
+
+                        9,25,26,
+                        9,26,10,
+
+                        10,26,27,
+                        10,27,11,
+
+                        11,27,28,
+                        11,28,12,
+
+                        12,28,29,
+                        12,29,13,
+
+                        13,29,30,
+                        13,30,14,
+
+                        14,30,31,
+                        14,31,15,
+
+                        15,31,16,
+                        15,16,0
+
+                        };
+
+
+
+
+    /*valor = 18;
+    for(int i=52; i<=99; i+=3){
+
+        indices[i] = 0;
+        indices[i+1] = valor+1;
+        indices[i+2] = valor+2;
+        valor += 1;
+
+        printf("%d  %d  %d\n", valor+1, valor+2);
+    }*/
 
 
     /*GLfloat NDC_coefficients[] = {
@@ -396,7 +459,6 @@ GLuint BuildTriangles()
     //
     // Este vetor "indices" define a TOPOLOGIA (veja slides 64-71 do documento Aula_04_Modelagem_Geometrica_3D.pdf).
     //
-    GLubyte indices[] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,1}; // GLubyte: valores entre 0 e 255 (8 bits sem sinal).
 
     // Criamos um buffer OpenGL para armazenar os índices acima
     GLuint indices_id;
