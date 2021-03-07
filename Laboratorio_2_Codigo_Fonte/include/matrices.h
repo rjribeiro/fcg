@@ -174,11 +174,8 @@ glm::mat4 Matrix_Rotate(float angle, glm::vec4 axis)
 {
     float c = cos(angle);
     float s = sin(angle);
-    float norm_axis = norm(axis); 
-    glm::vec4 v = glm::vec4(axis[0]/norm_axis, 
-                            axis[1]/norm_axis, 
-                            axis[2]/norm_axis, 
-                            axis[3]/norm_axis);
+
+    glm::vec4 v = axis / norm(axis);
 
     float vx = v.x;
     float vy = v.y;
@@ -259,12 +256,10 @@ glm::mat4 Matrix_Camera_View(glm::vec4 position_c, glm::vec4 view_vector, glm::v
     float wy = w.y;
     float wz = w.z;
 
-    glm::vec4 vetor_do_ponto_c = glm::vec4(position_c - origin_o[0],
+    glm::vec4 vetor_do_ponto_c = glm::vec4(position_c[0] - origin_o[0],
                                            position_c[1] - origin_o[1],
                                            position_c[2] - origin_o[2],
                                            0);
-
-
     return Matrix(
         // PREENCHA AQUI A MATRIZ DE MUDANÇA DE SISTEMA DE COORDENADAS (3D)
         // PARA AS COORDENADAS DE CÂMERA (MATRIZ VIEW HOMOGÊNEA), UTILIZANDO
@@ -297,7 +292,6 @@ glm::mat4 Matrix_Orthographic(float l, float r, float b, float t, float n, float
     return M;
 }
 
-// Matriz de projeção perspectiva
 glm::mat4 Matrix_Perspective(float field_of_view, float aspect, float n, float f)
 {
     float t = fabs(n) * tanf(field_of_view / 2.0f);
