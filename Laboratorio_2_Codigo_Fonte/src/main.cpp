@@ -101,6 +101,12 @@ float g_AngleX = 0.0f;
 float g_AngleY = 0.0f;
 float g_AngleZ = 0.0f;
 
+int tecla_w = 0;
+int tecla_s = 0;
+int tecla_a = 0;
+int tecla_d = 0;
+
+
 // "g_LeftMouseButtonPressed = true" se o usuário está com o botão esquerdo do mouse
 // pressionado no momento atual. Veja função MouseButtonCallback().
 bool g_LeftMouseButtonPressed = false;
@@ -274,12 +280,28 @@ int main()
         float z = r*cos(g_CameraPhi)*cos(g_CameraTheta);
         float x = r*cos(g_CameraPhi)*sin(g_CameraTheta);
 
+
         // Abaixo definimos as varáveis que efetivamente definem a câmera virtual.
         // Veja slides 195-227 e 229-234 do documento Aula_08_Sistemas_de_Coordenadas.pdf.
         glm::vec4 camera_position_c  = glm::vec4(x,y,z,1.0f); // Ponto "c", centro da câmera
-        glm::vec4 camera_lookat_l    = glm::vec4(0.0f,0.0f,0.0f,1.0f); // Ponto "l", para onde a câmera (look-at) estará sempre olhando
-        glm::vec4 camera_view_vector = camera_lookat_l - camera_position_c; // Vetor "view", sentido para onde a câmera está virada
+        //glm::vec4 camera_lookat_l    = glm::vec4(0.0f,0.0f,0.0f,1.0f); // Ponto "l", para onde a câmera (look-at) estará sempre olhando
+        //glm::vec4 camera_view_vector = camera_lookat_l - camera_position_c; // Vetor "view", sentido para onde a câmera está virada
+        glm::vec4 camera_view_vector = glm::vec4(-x,-y,-z,0.0f);
         glm::vec4 camera_up_vector   = glm::vec4(0.0f,1.0f,0.0f,0.0f); // Vetor "up" fixado para apontar para o "céu" (eito Y global)
+
+
+        glm::vec4 w = -camera_view_vector;
+        glm::vec4 u = crossproduct(camera_up_vector, w);
+
+        // Normalizamos os vetores u e w
+        w = w / norm(w);
+        u = u / norm(u);
+
+        camera_position_c = camera_position_c - Matrix_Scale(tecla_w,tecla_w, tecla_w)*w;
+        camera_position_c = camera_position_c + Matrix_Scale(tecla_s,tecla_s, tecla_s)*w;
+        camera_position_c = camera_position_c - Matrix_Scale(tecla_a,tecla_a, tecla_a)*u;
+        camera_position_c = camera_position_c + Matrix_Scale(tecla_d,tecla_d, tecla_d)*u;
+
 
         // Computamos a matriz "View" utilizando os parâmetros da câmera para
         // definir o sistema de coordenadas da câmera.  Veja slides 2-14, 184-190 e 236-242 do documento Aula_08_Sistemas_de_Coordenadas.pdf.
@@ -1042,6 +1064,26 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
     if (key == GLFW_KEY_Z && action == GLFW_PRESS)
     {
         g_AngleZ += (mod & GLFW_MOD_SHIFT) ? -delta : delta;
+    }
+
+    if (key == GLFW_KEY_W && action == GLFW_PRESS)
+    {
+        tecla_w += 1;
+    }
+
+    if (key == GLFW_KEY_S && action == GLFW_PRESS)
+    {
+        tecla_s += 1;
+    }
+
+    if (key == GLFW_KEY_A && action == GLFW_PRESS)
+    {
+        tecla_a += 1;
+    }
+
+    if (key == GLFW_KEY_D && action == GLFW_PRESS)
+    {
+        tecla_d += 1;
     }
 
     // Se o usuário apertar a tecla espaço, resetamos os ângulos de Euler para zero.

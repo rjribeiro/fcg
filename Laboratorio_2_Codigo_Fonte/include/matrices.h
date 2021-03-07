@@ -260,6 +260,19 @@ glm::mat4 Matrix_Camera_View(glm::vec4 position_c, glm::vec4 view_vector, glm::v
                                            position_c[1] - origin_o[1],
                                            position_c[2] - origin_o[2],
                                            0);
+
+    // printf("vetor w: %f, %f, %f, %f", w[0], w[1], w[2], w[3]);
+    // printf("\n");
+
+    // printf("vetor u: %f, %f, %f, %f", u[0], u[1], u[2], u[3]);
+    // printf("\n");
+
+    // printf("vetor v: %f, %f, %f, %f", v[0], v[1], v[2], v[3]);
+    // printf("\n");
+
+    // printf("vetor c: %f, %f, %f, %f", vetor_do_ponto_c[0], vetor_do_ponto_c[1], vetor_do_ponto_c[2], vetor_do_ponto_c[3]);
+    // printf("\n");
+
     return Matrix(
         // PREENCHA AQUI A MATRIZ DE MUDANÇA DE SISTEMA DE COORDENADAS (3D)
         // PARA AS COORDENADAS DE CÂMERA (MATRIZ VIEW HOMOGÊNEA), UTILIZANDO
