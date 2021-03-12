@@ -297,10 +297,15 @@ int main()
         w = w / norm(w);
         u = u / norm(u);
 
-        camera_position_c = camera_position_c - Matrix_Scale(tecla_w,tecla_w, tecla_w)*w;
-        camera_position_c = camera_position_c + Matrix_Scale(tecla_s,tecla_s, tecla_s)*w;
-        camera_position_c = camera_position_c - Matrix_Scale(tecla_a,tecla_a, tecla_a)*u;
-        camera_position_c = camera_position_c + Matrix_Scale(tecla_d,tecla_d, tecla_d)*u;
+        float movimentacao_w = tecla_w * 0.05;
+        float movimentacao_a = tecla_a * 0.05;
+        float movimentacao_s = tecla_s * 0.05;
+        float movimentacao_d = tecla_d * 0.05;
+
+        camera_position_c = camera_position_c - Matrix_Scale(movimentacao_w, movimentacao_w, movimentacao_w)*w;
+        camera_position_c = camera_position_c + Matrix_Scale(movimentacao_s, movimentacao_s, movimentacao_s)*w;
+        camera_position_c = camera_position_c - Matrix_Scale(movimentacao_a, movimentacao_a, movimentacao_a)*u;
+        camera_position_c = camera_position_c + Matrix_Scale(movimentacao_d, movimentacao_d, movimentacao_d)*u;
 
 
         // Computamos a matriz "View" utilizando os parâmetros da câmera para
@@ -1066,22 +1071,22 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
         g_AngleZ += (mod & GLFW_MOD_SHIFT) ? -delta : delta;
     }
 
-    if (key == GLFW_KEY_W && action == GLFW_PRESS)
+    if (key == GLFW_KEY_W)
     {
         tecla_w += 1;
     }
 
-    if (key == GLFW_KEY_S && action == GLFW_PRESS)
+    if (key == GLFW_KEY_S)
     {
         tecla_s += 1;
     }
 
-    if (key == GLFW_KEY_A && action == GLFW_PRESS)
+    if (key == GLFW_KEY_A)
     {
         tecla_a += 1;
     }
 
-    if (key == GLFW_KEY_D && action == GLFW_PRESS)
+    if (key == GLFW_KEY_D)
     {
         tecla_d += 1;
     }
